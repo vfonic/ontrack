@@ -72,9 +72,8 @@ class FormModal extends React.Component {
         </div>
 
         <div className="input-group">
-          <label className="required">Description</label>
+          <label>Description</label>
           <input type="text" value={this.state.description} onChange={this.handleDescriptionChange}></input>
-          <FieldErrors label="Description" val={this.state.description} validations={{ required: true }} show={this.state.submitted} handleErrors={this.handleErrors} />
         </div>
 
         <div className="form-actions">
