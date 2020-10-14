@@ -11,31 +11,44 @@ class FormModal extends React.Component {
   constructor(props) {
     super(props);
     let categoryId = this.props.categoryId;
-    if (!categoryId && this.props.categories.length) { categoryId = this.props.categories[0].id }
+    if (!categoryId && this.props.categories.length) {
+      categoryId = this.props.categories[0].id
+    }
 
     this.state = {
       description: '',
       category_id: categoryId,
       amount: 0,
+      currency: 'HRK',
       paidAt: new Date(),
       errors: {},
       submitted: false,
     };
   }
 
-  handleDescriptionChange = (e) => { this.setState({ description: e.target.value }); }
-  handleAmountChange = (num) => { this.setState({ amount: num }); }
-  handlePaidAtChange = (val) => { this.setState({ paidAt: val }); }
-  handleCategoryChange = (e) => { this.setState({ category_id: e.target.value }); }
-  handleErrors = (key, errs) => { this.setState({ errors: Object.assign(this.state.errors, { [key]: errs }) }); }
+  handleDescriptionChange = (e) => this.setState({ description: e.target.value });
+  handleAmountChange = (num) => this.setState({ amount: num });
+  handleCurrencyChange = (e) => this.setState({ currency: e.target.value });
+  handlePaidAtChange = (val) => this.setState({ paidAt: val });
+  handleCategoryChange = (e) => this.setState({ category_id: e.target.value });
+  handleErrors = (key, errs) => this.setState({ errors: Object.assign(this.state.errors, { [key]: errs }) });
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ submitted: true });
-    if (Object.values(this.state.errors).flat().length) { return; }
+    if (Object.values(this.state.errors).flat().length) {
+      return;
+    }
 
-    Expenses.create({ description: this.state.description.trim(), category_id: this.state.category_id, amount: this.state.amount, paid_at: this.state.paidAt }).then(
-      (resp) => { this.props.onSave(resp) },
-      (error) => { Alerts.genericError(); },
+    Expenses.create({
+      description: this.state.description.trim(),
+      category_id: this.state.category_id,
+      amount: this.state.amount,
+      currency: this.state.currency,
+      paid_at: this.state.paidAt,
+    }).then(
+      (resp) => this.props.onSave(resp),
+      (error) => Alerts.genericError(),
     )
   }
 
@@ -50,35 +63,39 @@ class FormModal extends React.Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className="input-group">
-          <label className="required">Amount</label>
-          <CurrencyInput initialValue={this.state.amount} onChange={this.handleAmountChange} allowNegative={true} />
-          <FieldErrors label="Amount" val={this.state.amount} validations={{ required: true }} show={this.state.submitted} handleErrors={this.handleErrors} />
-        </div>
-
         <div className="row">
-          <div className="input-group seven columns">
-            <label className="required">Category</label>
-            <select value={this.state.category_id} onChange={this.handleCategoryChange}>
-              {this.props.categories.map((c) => { return <option key={c.id} value={c.id}>{c.name}</option> })}
-            </select>
-          </div>
-
           <div className="input-group five columns">
             <label className="required">Date</label>
             <DatePicker onChange={this.handlePaidAtChange} />
-            <FieldErrors label="Date" val={this.state.paidAt} validations={{ required: true }} show={this.state.submitted} handleErrors={this.handleErrors} />
+            <FieldErrors label="Date" val={this.state.paidAt} validations={{ required: true }}
+                         show={this.state.submitted} handleErrors={this.handleErrors} />
           </div>
-        </div>
 
-        <div className="input-group">
-          <label>Description</label>
-          <input type="text" value={this.state.description} onChange={this.handleDescriptionChange}></input>
+          <div className="input-group twelve columns">
+            <label className="required">Amount</label>
+            <CurrencyInput focus initialValue={this.state.amount} currency={this.state.currency}
+                           onChange={this.handleAmountChange} onCurrencyChange={this.handleCurrencyChange} />
+            <FieldErrors label="Amount" val={this.state.amount} validations={{ required: true }}
+                         show={this.state.submitted} handleErrors={this.handleErrors} />
+          </div>
+
+          <div className="input-group seven columns">
+            <label className="required">Category</label>
+            <select value={this.state.category_id} onChange={this.handleCategoryChange}>
+              {this.props.categories.map((c) => {
+                return <option key={c.id} value={c.id}>{c.name}</option>
+              })}
+            </select>
+          </div>
+
+          <div className="input-group twelve columns">
+            <label>Description</label>
+            <input type="text" value={this.state.description} onChange={this.handleDescriptionChange} />
+          </div>
         </div>
 
         <div className="form-actions">
           <button type="submit" className="btn btn-dark">Save</button>
-          <a className="dim-til-hover" href="/expense_uploads/new">Import a CSV instead</a>
         </div>
       </form>
     );

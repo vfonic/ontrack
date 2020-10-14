@@ -70,7 +70,7 @@ class FormModal extends React.Component {
       <Modal title={`${this.action()} Category`} onClose={this.props.onClose}>
         <form onSubmit={this.handleSubmit}>
           <div className="row row-flex">
-            <div className="input-group eight columns">
+            <div className="input-group seven columns">
               <label className="required">Name</label>
               <input type="text" value={this.state.name} onChange={this.handleNameChange} ref={input => this.nameInput = input} />
               <FieldErrors label="Name" val={this.state.name.trim()} validations={{ required: true }} show={this.state.submitted} handleErrors={this.handleErrors} />

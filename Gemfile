@@ -28,3 +28,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # authentication
 gem 'devise'
+
+# HTTP requests
+gem 'http'
+# XML/HTML parsing
+gem 'nokogiri'

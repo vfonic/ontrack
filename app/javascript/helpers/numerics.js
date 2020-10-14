@@ -1,31 +1,31 @@
-import moment from "moment";
+import moment from 'moment';
 
 const Numerics = {
   centsToDollars(value) {
-    if (value == null || value == undefined) return '';
+    if (value == null) return '';
 
     try {
-      return '$' + ((value / 100).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    } catch(error) {
+      return '$' + ((value / 100).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } catch (error) {
       console.error(value, error);
       return value.toString();
     }
   },
 
   commify(value) {
-    if (value == null || value == undefined) return ''
+    if (value == null) return ''
     // This accounts for more than 3 digits after a decimal. We don't want commas there.
-    let parts = value.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
+    let parts = value.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
   },
 
   timestamp(value) {
-    if (value == null || value == undefined) return '';
+    if (value == null) return '';
 
     try {
-      return moment(value).format("MM/DD/YYYY")
-    } catch(error) {
+      return moment(value).format('MM/DD/YYYY')
+    } catch (error) {
       console.error(value, error);
       return value.toString();
     }
