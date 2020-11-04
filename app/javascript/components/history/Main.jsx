@@ -136,7 +136,7 @@ class Main extends React.Component {
   renderExpense(expense) {
     return (
       <tr key={expense.id}>
-        <td className="input-group mw-150">
+        <td className="input-group" style={{ maxWidth: '110px' }}>
           <DatePicker onChange={(val) => this.updateExpense(expense.id, { paid_at: val })}
                       value={new Date(expense.paid_at)} className="bg-gray-slight-contrast" />
         </td>
