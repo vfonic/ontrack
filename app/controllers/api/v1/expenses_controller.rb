@@ -22,7 +22,7 @@ module Api; module V1
       expense = ::Expense.new(
         description: params[:description],
         category_id: params[:category_id],
-        amount: usd_amount(params[:amount], params[:currency]),
+        amount: Money.from_subunits(params[:amount], params[:currency]),
         paid_at: params[:paid_at]
       )
       successful = expense.save
@@ -41,20 +41,12 @@ module Api; module V1
         category_id: params.fetch(:category_id, expense.category_id),
         description: params.fetch(:description, expense.description),
         paid_at: params.fetch(:paid_at, expense.paid_at),
-        amount: usd_amount(params.fetch(:amount, expense.amount), params.fetch(:currency, 'USD')),
+        amount: Money.from_subunits(params.fetch(:amount, expense.amount), params.fetch(:currency, 'USD')),
       )
       render json: nil, status: successful ? 200 : 500
     end
 
     private
-
-    def usd_amount(amount_in_cents, currency)
-      return amount_in_cents if currency == 'USD'
-
-      usd_to_hrk_conversion_rate = ::UsdToHrkConversionRateFetcher.call
-      # round the amount to leave out any cents and then convert it back to cents
-      (amount_in_cents.to_f / usd_to_hrk_conversion_rate / 100).round * 100
-    end
 
     def normalized_sort(key, sort_desc)
       cols = { paid_at: "paid_at", amount: "amount" }

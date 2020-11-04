@@ -33,3 +33,5 @@ gem 'devise'
 gem 'http'
 # XML/HTML parsing
 gem 'nokogiri'
+
+gem 'shopify-money', require: 'money'
