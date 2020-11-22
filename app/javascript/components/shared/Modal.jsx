@@ -1,46 +1,28 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React, { useEffect } from "react"
 
-class Modal extends React.Component {
-	componentDidMount() {
-		document.body.className += " modal-open"
-	}
+const Modal = props => {
+	useEffect(() => {
+		document.body.classList.add("modal-open")
+		return () => document.body.classList.remove("modal-open")
+	}, [])
 
-	componentWillUnmount() {
-		const openModals = document.querySelectorAll(".modal").length
-		if (openModals == 1) {
-			document.body.className = document.body.className.replace("modal-open", "")
-		}
-	}
+	return (
+		<div className="modal-mask modal">
+			<div className="modal-wrapper">
+				<div className="modal-container">
+					<div className="modal-header">
+						<h3>{props.title}</h3>
 
-	render() {
-		return (
-			<div className="modal-mask modal">
-				<div className="modal-wrapper">
-					<div className="modal-container">
-						<div className="modal-header">
-							<h3>{this.props.title}</h3>
-
-							<a className="close" onClick={this.props.onClose}>
-								<i className="fa fa-times"></i>
-							</a>
-						</div>
-
-						<div className="modal-body">{this.props.children}</div>
+						<a className="close" onClick={props.onClose}>
+							<i className="fa fa-times"></i>
+						</a>
 					</div>
+
+					<div className="modal-body">{props.children}</div>
 				</div>
 			</div>
-		)
-	}
-}
-
-Modal.defaultProps = {
-	title: "",
-}
-
-Modal.propTypes = {
-	title: PropTypes.string,
-	onClose: PropTypes.func,
+		</div>
+	)
 }
 
 export default Modal
