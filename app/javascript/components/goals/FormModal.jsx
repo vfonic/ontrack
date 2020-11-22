@@ -22,7 +22,7 @@ const FormModal = ({ onClose, onSave, goals = { monthly: 0 } }) => {
 		<Modal title="Edit Goal" onClose={onClose}>
 			<form onSubmit={handleSubmit}>
 				<div className="row">
-					<div className="input-group">
+					<div className="six columns input-group">
 						<label>Total Monthly Goal</label>
 						<CurrencyInput initialValue={goal} onChange={handleGoalChange} />
 					</div>
