@@ -11,12 +11,8 @@ class Overview extends React.Component {
 		this.state = { showGoalModal: false }
 	}
 
-	openGoal = () => {
-		this.setState({ showGoalModal: true })
-	}
-	closeGoal = () => {
-		this.setState({ showGoalModal: false })
-	}
+	openGoal = () => this.setState({ showGoalModal: true })
+	closeGoal = () => this.setState({ showGoalModal: false })
 	onGoalSave = () => {
 		this.closeGoal()
 		this.props.onChange()
@@ -57,19 +53,16 @@ class Overview extends React.Component {
 		)
 	}
 
-	renderGoalModal() {
-		if (!this.state.showGoalModal) {
-			return ""
-		}
-		return (
-			<GoalFormModal onClose={this.closeGoal} onSave={this.onGoalSave} goals={{ monthly: this.props.monthlyGoal }} />
-		)
-	}
-
 	render() {
 		return (
 			<div>
-				{this.renderGoalModal()}
+				{this.state.showGoalModal && (
+					<GoalFormModal
+						onClose={this.closeGoal}
+						onSave={this.onGoalSave}
+						goals={{ monthly: this.props.monthlyGoal }}
+					/>
+				)}
 				<div className="mb-10">{moment().format("MMMM")}</div>
 
 				<div className="flex row-flex flex-space-between flex-baseline mb-10">
