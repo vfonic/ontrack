@@ -18,12 +18,20 @@ class Overview extends React.Component {
 		this.props.onChange()
 	}
 
-	totalSpend() {
+	get totalSpend() {
 		return this.props.categoriesWithExpensesAndSpend.reduce((sum, cat) => sum + cat.spend, 0)
 	}
 
+	get monthlyGoal() {
+		return this.props.monthlyGoal
+	}
+
+	get remainingSpend() {
+		return this.monthlyGoal - this.totalSpend
+	}
+
 	percentages() {
-		const outOf = Math.max(this.props.monthlyGoal, this.totalSpend())
+		const outOf = Math.max(this.props.monthlyGoal, this.totalSpend)
 		return this.props.categoriesWithExpensesAndSpend.map(category => {
 			return { percentage: (category.spend / outOf) * 100, color: category.color }
 		})
@@ -37,12 +45,12 @@ class Overview extends React.Component {
 				</a>
 			)
 		}
-		const diff = this.props.monthlyGoal - this.totalSpend()
+
 		const diffDisplay =
-			diff >= 0 ? (
-				<b className="text-muted">{Numerics.centsToDollars(diff)} remaining</b>
+			this.remainingSpend >= 0 ? (
+				<b className="text-muted">{Numerics.centsToDollars(this.remainingSpend)} remaining</b>
 			) : (
-				<b className="text-warning">{Numerics.centsToDollars(Math.abs(diff))} over</b>
+				<b className="text-warning">{Numerics.centsToDollars(Math.abs(this.remainingSpend))} over</b>
 			)
 
 		return (
@@ -51,6 +59,18 @@ class Overview extends React.Component {
 				<img className="hover-pointer icon-default dim-til-hover" src={window.iconEdit} onClick={this.openGoal} />
 			</div>
 		)
+	}
+
+	renderRemainingAverageSpending() {
+		if (!this.props.monthlyGoal) {
+			return
+		}
+
+		const daysTillTheEndOfTheMonth = moment().endOf("month").diff(moment().add(-1, "day"), "days")
+
+		const dailyRemainingSpending = Numerics.centsToDollars(this.remainingSpend / daysTillTheEndOfTheMonth)
+
+		return <div style={{ marginTop: "10px" }}>{dailyRemainingSpending} remaining on average per day</div>
 	}
 
 	render() {
@@ -67,12 +87,14 @@ class Overview extends React.Component {
 
 				<div className="flex row-flex flex-space-between flex-baseline mb-10">
 					<div>
-						<h1>{Numerics.centsToDollars(this.totalSpend())}</h1>
+						<h1>{Numerics.centsToDollars(this.totalSpend)}</h1>
 					</div>
 					<div>{this.goalComparisonDisplay()}</div>
 				</div>
 
 				<Progress data={this.percentages()} />
+
+				{this.renderRemainingAverageSpending()}
 			</div>
 		)
 	}
