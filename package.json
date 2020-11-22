@@ -17,5 +17,9 @@
     "react-dom": "^16.10.1",
     "sweetalert2": "^8.18.0"
   },
-  "version": "0.1.0"
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
 }
